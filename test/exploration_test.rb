@@ -3,10 +3,9 @@ require "test/unit"
 require "hdfs"
 
 class TestExploration < Test::Unit::TestCase
-	def test_ls
-		fs = Hdfs::Fs.new
-		p = Hdfs::Path.new("/")
+	def test_file_new
+		assert_raise(Errno::ENOENT) { f = Hdfs::File.new("xxx") }
+		assert_raise(Errno::ENOENT) { f = Hdfs::File.new(".") }
 		
-		puts fs.fs.getFileStatus(p.path).group
 	end
 end

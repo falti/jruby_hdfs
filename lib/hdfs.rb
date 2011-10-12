@@ -16,14 +16,9 @@ elsif $VERBOSE
 	  warn "HADOOP_HOME is not set!"
 end
 
-
-
 module Hdfs
 	
-	
-	import org.apache.hadoop.fs.FSDataInputStream
-	import org.apache.hadoop.fs.FSDataOutputStream
-	
+	private
 	
 	class Fs
 		import org.apache.hadoop.conf.Configuration
@@ -34,7 +29,16 @@ module Hdfs
 		def initialize
 			conf = Configuration.new
 			@fs=FileSystem.get(conf)
-		end		
+			puts "HDFS has been created"
+		end
+		
+		def exists?(path)
+			@fs.exists(path.path)
+		end
+		
+		def file?(path)
+			@fs.isFile(path.path)
+		end
 	end
 	
 	class Path
@@ -46,8 +50,33 @@ module Hdfs
 			@path=Path.new(p)
 		end
 		
+	end
+end
+
+module Hdfs
+	
+	
+	import org.apache.hadoop.fs.FSDataInputStream
+	import org.apache.hadoop.fs.FSDataOutputStream
+	
+	@fs=Fs.new
+	
+	def self.fs
+		@fs
+	end
+	
+	class File
+		def initialize(path)
+			@path=Path.new(path)
+			@fs=Hdfs::fs
+			raise Errno::ENOENT, "File does not exist" unless @fs.exists?(@path)
+			raise Errno::ENOENT, "File not a regular file" unless @fs.file?(@path)
+		end
+		
 		
 	end
+	
+	
 end
 
 #public static final String theFilename = "hello.txt";
