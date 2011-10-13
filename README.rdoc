@@ -1,0 +1,16 @@
+== JRuby HDFS
+
+This is an interface to the Hadoop Distributed Filesystem.
+It uses the Java API thus, only JRuby is supported.
+
+== Getting Started
+
+1. Run the tests
+
+Install and start Hadoop (at least hdfs) and set HADOOP_HOME environment variable,
+then run
+
+    rake test
+
+Please note that the tests will modify your HDFS (add/remove files and paths).
+You might want to run a separate HDFS just for the tests!

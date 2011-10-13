@@ -39,6 +39,10 @@ module Hdfs
     def file?(path)
       @fs.isFile(path.path)
     end
+    
+    def open(path)
+      @fs.open(path.path).to_io
+    end
   end
   
   class Path
@@ -66,11 +70,26 @@ module Hdfs
   end
   
   class File
+    
     def initialize(path)
-      @path=Path.new(path)
-      @fs=Hdfs::fs
-      raise Errno::ENOENT, "File does not exist" unless @fs.exists?(@path)
-      raise Errno::ENOENT, "File not a regular file" unless @fs.file?(@path)
+      _path=Path.new(path)
+      _fs=Hdfs::fs
+      raise Errno::ENOENT, "File does not exist" unless _fs.exists?(_path)
+      raise Errno::ENOENT, "File not a regular file" unless _fs.file?(_path)
+      
+      @stream = Hdfs::fs.open(_path);
+    end
+    
+    def close
+      @stream.close
+    end
+    
+    def read
+      @stream.read      
+    end
+    
+    def closed?
+      @stream.closed?
     end
     
     
