@@ -36,14 +36,26 @@ class TestExploration < MiniTest::Unit::TestCase
     f = Hdfs::File.new(testfile_remote)
     f.close
   end
+  
+  def test_file_open_close
+    f = Hdfs::File.new(testfile_remote)
+    assert !f.closed?
+    f.close
+    assert f.closed?
+  end
 
   def test_file_read
     f = Hdfs::File.new(testfile_remote)
     buffer = f.read
     assert_match /require 'rubygems'/, buffer
-    assert !f.closed?
     f.close
-    assert f.closed?
+  end
+  
+  def test_file_readlines
+    f = Hdfs::File.new(testfile_remote)
+    buffer = f.readlines
+    assert_match /require 'rubygems'/, buffer[0]
+    f.close
   end
   
   

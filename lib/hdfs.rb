@@ -69,8 +69,11 @@ module Hdfs
     @fs
   end
   
-  class File
-    
+  
+  require "delegate"
+  
+  class File < Delegator
+
     def initialize(path)
       _path=Path.new(path)
       _fs=Hdfs::fs
@@ -80,16 +83,12 @@ module Hdfs
       @stream = Hdfs::fs.open(_path);
     end
     
-    def close
-      @stream.close
+    def __getobj__
+      @stream
     end
     
-    def read
-      @stream.read      
-    end
-    
-    def closed?
-      @stream.closed?
+    def __setobj__(obj)
+      @stream = obj
     end
     
     
