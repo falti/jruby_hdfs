@@ -4,7 +4,7 @@ require 'minitest/autorun'
 
 require "hdfs"
 
-class TestExploration < MiniTest::Unit::TestCase
+class FileReadTest < MiniTest::Unit::TestCase
   attr_reader :hadoop, :testfile_remote
   
   def setup
@@ -56,6 +56,11 @@ class TestExploration < MiniTest::Unit::TestCase
     buffer = f.readlines
     assert_match /require 'rubygems'/, buffer[0]
     f.close
+  end
+  
+  def test_file_should_not_be_writable
+    #f = Hdfs::File.new(testfile_remote)
+    #assert !f.writable?
   end
   
   

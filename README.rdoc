@@ -10,7 +10,7 @@ It uses the Java API thus, only JRuby is supported.
 Install and start Hadoop (at least hdfs) and set HADOOP_HOME environment variable,
 then run
 
-    rake test
+    rake
 
 Please note that the tests will modify your HDFS (add/remove files and paths).
 You might want to run a separate HDFS just for the tests!
