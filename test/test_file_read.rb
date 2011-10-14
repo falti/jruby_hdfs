@@ -1,8 +1,5 @@
-require 'rubygems'
-gem 'minitest'
-require 'minitest/autorun'
-
-require "hdfs"
+require 'helper'
+require 'hdfs'
 
 class FileReadTest < MiniTest::Unit::TestCase
   attr_reader :hadoop, :testfile_remote
@@ -47,14 +44,14 @@ class FileReadTest < MiniTest::Unit::TestCase
   def test_file_read
     f = Hdfs::File.new(testfile_remote)
     buffer = f.read
-    assert_match /require 'rubygems'/, buffer
+    assert_match /require 'helper'/, buffer
     f.close
   end
   
   def test_file_readlines
     f = Hdfs::File.new(testfile_remote)
     buffer = f.readlines
-    assert_match /require 'rubygems'/, buffer[0]
+    assert_match /require 'helper'/, buffer[0]
     f.close
   end
   
