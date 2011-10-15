@@ -5,8 +5,6 @@ module Hdfs
   
   class File < Delegator
     
-    
-    
     def initialize(path,mode="r")
       raise Errno::ENOENT, "File does not exist" unless File.exists?(path)
       raise Errno::ENOENT, "File not a regular file" unless File.file?(path)
@@ -104,6 +102,19 @@ module Hdfs
     
     def self.file?(path)
       Hdfs.fs.file?(path)
+    end
+    
+    def self.directory?(path)
+      Hdfs.fs.directory?(path)
+    end
+    
+    def self.chardev?(path); false; end
+    def self.blockdev?(path); false; end
+    def self.executable?(path); false; end
+    def self.executable_real?(path); false; end
+    
+    class << self
+       alias_method :exist?, :exists?
     end
     
   end

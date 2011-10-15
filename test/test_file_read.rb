@@ -1,7 +1,7 @@
 require 'helper'
 require 'hdfs'
 
-class FileReadTest < MiniTest::Unit::TestCase
+class TestFileRead < MiniTest::Unit::TestCase
   attr_reader :hadoop, :testfile_remote
   
   def setup
@@ -49,6 +49,7 @@ class FileReadTest < MiniTest::Unit::TestCase
   end
   
   def test_file_readlines
+
     f = Hdfs::File.new(testfile_remote)
     buffer = f.readlines
     assert_match /require 'helper'/, buffer[0]
@@ -72,9 +73,10 @@ class FileReadTest < MiniTest::Unit::TestCase
       assert_match /require 'helper'/, buffer
     end
     
-    assert f.closed?
-    
+    assert f.closed?    
   end
+  
+  
   
   
 end

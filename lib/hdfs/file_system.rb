@@ -28,6 +28,11 @@ module Hdfs
       @fs.open(path.path).to_io
     end
     
+    def directory?(path)
+      path = coerce_path path
+      @fs.getFileStatus(path.path).isDir
+    end
+    
     private
     def coerce_path(path)
       Path.new(path) unless path.is_a? Path
