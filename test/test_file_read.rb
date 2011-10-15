@@ -56,8 +56,13 @@ class FileReadTest < MiniTest::Unit::TestCase
   end
   
   def test_file_should_not_be_writable
-    #f = Hdfs::File.new(testfile_remote)
-    #assert !f.writable?
+    f = Hdfs::File.new(testfile_remote)
+    assert !f.writable?
+  end
+  
+  def test_file_should_not_be_writable_when_opened_in_r_mode
+    f = Hdfs::File.new(testfile_remote,"r")
+    assert !f.writable?
   end
   
   
