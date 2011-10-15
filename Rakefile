@@ -41,4 +41,12 @@ Rcov::RcovTask.new do |test|
   test.rcov_opts << '--exclude "gems/*"'
 end
 
+require 'rdoc/task'
+
+RDoc::Task.new do |rdoc|
+  rdoc.main = "README.rdoc"
+  rdoc.rdoc_files.include("README.rdoc", "lib/**/*.rb")
+  rdoc.options << "--all"
+end
+
 task :default => :test
