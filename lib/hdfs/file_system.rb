@@ -14,15 +14,23 @@ module Hdfs
     end
     
     def exists?(path)
+      path = coerce_path path
       @fs.exists(path.path)
     end
     
     def file?(path)
+      path = coerce_path path
       @fs.isFile(path.path)
     end
     
     def open(path)
+      path = coerce_path path
       @fs.open(path.path).to_io
+    end
+    
+    private
+    def coerce_path(path)
+      Path.new(path) unless path.is_a? Path
     end
   end
 
