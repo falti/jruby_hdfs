@@ -2,13 +2,28 @@ module Hdfs
 
   require "delegate"
   
-  
+  # Provides access to a HDFS cluster by mimicking Ruby's ::IO and ::File API
+  # 
+  # === Basic Usage
+  #
+  #   # open HDFS file for read (stream will not be closed)
+  #   file = File.new(path,"r") # will open a read-only stream in HDFS
+  #   puts file.read
+  #   file.close
+  #
+  #   # or use with a block (stream will be closed automatically)
+  #   File.new("/my/file") do |file|
+  #     puts file.read
+  #   end
+  #
+  # _file_ is basically a wrapper for the underlying HDFS stream as a Ruby IO stream.
+  #
   class File < Delegator
     
     def initialize(path,mode="r")
       raise Errno::ENOENT, "File does not exist" unless File.exists?(path)
       raise Errno::ENOENT, "File not a regular file" unless File.file?(path)
-      _mode=File.parse_mode(mode)
+      _mode=self.class.parse_mode(mode)
       
       if _mode & IO::RDWR != 0
         @readable = true
@@ -22,16 +37,63 @@ module Hdfs
       @stream = Hdfs.fs.open(path);
     end
     
+    def writable?
+      @writeable
+    end
+    
+    
+    
+    def self.open(*args)
+      f=File.new(args[0]) if args.length == 1
+      f=File.new(args[0],args[1]) if args.length == 2
+
+      if block_given?
+        begin
+          yield f
+        ensure
+          f.close
+        end
+      end
+      f
+    end
+    
+    def self.close
+      Hdfs.fs.close
+    end
+    
+    def self.exists?(path)
+      Hdfs.fs.exists?(path)
+    end
+    
+    def self.file?(path)
+      Hdfs.fs.file?(path)
+    end
+    
+    def self.directory?(path)
+      Hdfs.fs.directory?(path)
+    end
+    
+    # will always return => false
+    def self.chardev?(path); false; end
+    # will always return => false
+    def self.blockdev?(path); false; end
+    # will always return => false
+    def self.executable?(path); false; end
+    # will always return => false
+    def self.executable_real?(path); false; end
+    
+    class << self
+       alias_method :exist?, :exists?
+    end
+    
+    # :nodoc:
+    
     def __getobj__
       @stream
     end
     
     def __setobj__(obj)
       @stream = obj
-    end
-    
-    def writable?
-      @writeable
     end
     
     def self.parse_mode(mode)
@@ -80,41 +142,6 @@ module Hdfs
     
       ret
       
-    end
-    
-    def self.open(*args)
-      f=File.new(args[0]) if args.length == 1
-      f=File.new(args[0],args[1]) if args.length == 2
-
-      if block_given?
-        begin
-          yield f
-        ensure
-          f.close
-        end
-      end
-      f
-    end
-    
-    def self.exists?(path)
-      Hdfs.fs.exists?(path)
-    end
-    
-    def self.file?(path)
-      Hdfs.fs.file?(path)
-    end
-    
-    def self.directory?(path)
-      Hdfs.fs.directory?(path)
-    end
-    
-    def self.chardev?(path); false; end
-    def self.blockdev?(path); false; end
-    def self.executable?(path); false; end
-    def self.executable_real?(path); false; end
-    
-    class << self
-       alias_method :exist?, :exists?
     end
     
   end

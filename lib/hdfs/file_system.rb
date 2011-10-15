@@ -1,11 +1,10 @@
 module Hdfs
-  private
   
+  # Wrapper for a org.apache.hadoop.fs.FileSystem
+  # shall not be used directly but via Hdfs::File
   class FileSystem
     import org.apache.hadoop.conf.Configuration
     import org.apache.hadoop.fs.FileSystem
-    
-    attr_reader :fs
     
     def initialize
       conf = Configuration.new
@@ -31,6 +30,12 @@ module Hdfs
     def directory?(path)
       path = coerce_path path
       @fs.getFileStatus(path.path).isDir
+    end
+    
+    # From the Hadoop API docs:
+    # No more filesystem operations are needed. Will release any held locks.
+    def close
+      @fs.close
     end
     
     private
