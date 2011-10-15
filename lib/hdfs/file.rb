@@ -36,12 +36,10 @@ module Hdfs
       @writeable
     end
     
-    private 
-    
     def self.parse_mode(mode)
-        ret = 0
-
-        case mode[0]
+      ret = 0
+    
+      case mode[0]
         when ?r
           ret |= IO::RDONLY
         when ?w
@@ -50,40 +48,56 @@ module Hdfs
           ret |= IO::WRONLY | IO::CREAT | IO::APPEND
         else
           raise ArgumentError, "invalid mode -- #{mode}"
-        end
-
-        return ret if mode.length == 1
-
-        case mode[1]
-        when ?+
-          ret &= ~(IO::RDONLY | IO::WRONLY)
-          ret |= IO::RDWR
-        when ?b
-          ret |= IO::BINARY
-        when ?:
-          warn("encoding options not supported in 1.8")
-          return ret
-        else
-          raise ArgumentError, "invalid mode -- #{mode}"
-        end
-
-        return ret if mode.length == 2
-
-        case mode[2]
-        when ?+
-          ret &= ~(IO::RDONLY | IO::WRONLY)
-          ret |= IO::RDWR
-        when ?b
-          ret |= IO::BINARY
-        when ?:
-          warn("encoding options not supported in 1.8")
-          return ret
-        else
-          raise ArgumentError, "invalid mode -- #{mode}"
-        end
-
-        ret
       end
+    
+      return ret if mode.length == 1
+    
+      case mode[1]
+        when ?+
+          ret &= ~(IO::RDONLY | IO::WRONLY)
+          ret |= IO::RDWR
+        when ?b
+          ret |= IO::BINARY
+        when ?:
+          warn("encoding options not supported in 1.8")
+          return ret
+        else
+          raise ArgumentError, "invalid mode -- #{mode}"
+      end
+    
+      return ret if mode.length == 2
+    
+      case mode[2]
+        when ?+
+          ret &= ~(IO::RDONLY | IO::WRONLY)
+          ret |= IO::RDWR
+        when ?b
+          ret |= IO::BINARY
+        when ?:
+          warn("encoding options not supported in 1.8")
+          return ret
+        else
+          raise ArgumentError, "invalid mode -- #{mode}"
+      end
+    
+      ret
+      
     end
+    
+    def self.open(*args)
+      f=File.new(args[0]) if args.length == 1
+      f=File.new(args[0],args[1]) if args.length == 2
+
+      if block_given?
+        begin
+          yield f
+        ensure
+          f.close
+        end
+      end
+      f
+    end
+    
+  end
     
 end

@@ -65,5 +65,16 @@ class FileReadTest < MiniTest::Unit::TestCase
     assert !f.writable?
   end
   
+  def test_file_open_with_block
+    
+    f = Hdfs::File.open(testfile_remote,"r") do |f|
+      buffer = f.read
+      assert_match /require 'helper'/, buffer
+    end
+    
+    assert f.closed?
+    
+  end
+  
   
 end
