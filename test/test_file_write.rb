@@ -1,7 +1,7 @@
 require 'helper'
 require 'hdfs'
 
-class TestFileRead < MiniTest::Unit::TestCase
+class TestFileWrite < MiniTest::Unit::TestCase
   attr_reader :hadoop, :testfile_remote
   
   def setup
