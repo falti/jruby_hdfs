@@ -21,8 +21,7 @@ module Hdfs
   class File < Delegator
     
     def initialize(path,mode="r")
-      raise Errno::ENOENT, "File does not exist" unless File.exists?(path)
-      raise Errno::ENOENT, "File not a regular file" unless File.file?(path)
+      
       _mode=self.class.parse_mode(mode)
       
       if _mode & IO::RDWR != 0
@@ -34,7 +33,12 @@ module Hdfs
         @readable = true
       end
       
-      @stream = Hdfs.fs.open(path);
+      if @readable
+        raise Errno::ENOENT, "File does not exist" unless  File.exists?(path)
+        raise Errno::ENOENT, "File not a regular file" unless File.file?(path)
+      end
+    
+      @stream = Hdfs.fs.open(path,@writable)
     end
     
     def writable?

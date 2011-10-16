@@ -9,7 +9,6 @@ module Hdfs
     def initialize
       conf = Configuration.new
       @fs=org.apache.hadoop.fs.FileSystem.get(conf)
-      puts "HDFS has been created"
     end
     
     def exists?(path)
@@ -22,9 +21,13 @@ module Hdfs
       @fs.isFile(path.path)
     end
     
-    def open(path)
+    def open(path, writable=false)
       path = coerce_path path
-      @fs.open(path.path).to_io
+      unless writable
+        @fs.open(path.path).to_io
+      else
+        @fs.create(path.path).to_io
+      end
     end
     
     def directory?(path)
