@@ -23,7 +23,7 @@ class TestFileWrite < MiniTest::Unit::TestCase
     @local_temp_file.rewind
   end
   
-  def _teardown
+  def teardown
     @local_temp_file.close
     @local_temp_file.unlink
     %x[#{hadoop} fs -rm #{testfile_remote} > /dev/null 2>&1]
