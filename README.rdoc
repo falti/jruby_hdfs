@@ -11,15 +11,15 @@ It uses the Java API thus, only JRuby is supported.
 
 open HDFS file for read (stream will not be closed)
 
-	file = File.new(path,"r") # will open a read-only stream in HDFS
-	puts file.read
-	file.close
+    file = File.new(path,"r") # will open a read-only stream in HDFS
+    puts file.read
+    file.close
 
 or use with a block (stream will be closed automatically)
-
-	File.new("/my/file") do |file|
-		puts file.read
-	end
+    
+    File.new("/my/file") do |file|
+        puts file.read
+    end
 
 === Run the tests
 
