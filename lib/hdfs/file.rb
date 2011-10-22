@@ -3,19 +3,6 @@ module Hdfs
   require "delegate"
   
   # Provides access to a HDFS cluster by mimicking Ruby's ::IO and ::File API
-  # 
-  # === Basic Usage
-  #
-  #   # open HDFS file for read (stream will not be closed)
-  #   file = File.new(path,"r") # will open a read-only stream in HDFS
-  #   puts file.read
-  #   file.close
-  #
-  #   # or use with a block (stream will be closed automatically)
-  #   File.new("/my/file") do |file|
-  #     puts file.read
-  #   end
-  #
   # _file_ is basically a wrapper for the underlying HDFS stream as a Ruby IO stream.
   #
   class File < Delegator

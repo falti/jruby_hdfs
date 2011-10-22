@@ -7,7 +7,21 @@ It uses the Java API thus, only JRuby is supported.
 
 == Getting Started
 
-1. Run the tests
+=== Usage 
+
+open HDFS file for read (stream will not be closed)
+
+	file = File.new(path,"r") # will open a read-only stream in HDFS
+	puts file.read
+	file.close
+
+or use with a block (stream will be closed automatically)
+
+	File.new("/my/file") do |file|
+		puts file.read
+	end
+
+=== Run the tests
 
 Install and start Hadoop (at least hdfs) and set HADOOP_HOME environment variable,
 then run

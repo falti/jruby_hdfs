@@ -1,8 +1,10 @@
+require "delegate"
+
 module Hdfs
   
   # Wrapper for a org.apache.hadoop.fs.FileSystem
   # shall not be used directly but via Hdfs::File
-  class FileSystem
+  class FileSystem < Delegator
     import org.apache.hadoop.conf.Configuration
     import org.apache.hadoop.fs.FileSystem
     
@@ -41,10 +43,21 @@ module Hdfs
       @fs.close
     end
     
+    def __getobj__
+      @fs
+    end
+    
+    def __setobj__(obj)
+      @fs = obj
+    end
+    
     private
     def coerce_path(path)
       Path.new(path) unless path.is_a? Path
     end
+    
+    
+    
   end
 
 end

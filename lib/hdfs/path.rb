@@ -12,6 +12,10 @@ module Hdfs
       @path=Path.new(p)
     end
     
+    def self.hadoop_path(p)
+      Path.new(p)
+    end
+    
   end
   
 end
