@@ -60,6 +60,11 @@ module Hdfs
       Hdfs.fs.file?(path)
     end
     
+    def self.size(path)
+      Hdfs.fs.size(path)
+    end
+    
+
     def self.directory?(path)
       Hdfs.fs.directory?(path)
     end

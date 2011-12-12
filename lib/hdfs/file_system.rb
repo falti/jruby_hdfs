@@ -22,6 +22,12 @@ module Hdfs
       path = coerce_path path
       @fs.isFile(path.path)
     end
+
+    
+    def size(path)
+      path = coerce_path path
+      @fs.getFileStatus(path.path).getLen()
+    end
     
     def open(path, writable=false)
       path = coerce_path path
@@ -36,7 +42,7 @@ module Hdfs
       path = coerce_path path
       @fs.getFileStatus(path.path).isDir
     end
-    
+
     # From the Hadoop API docs:
     # No more filesystem operations are needed. Will release any held locks.
     def close

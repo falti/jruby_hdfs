@@ -59,4 +59,13 @@ class TestFileWrite < MiniTest::Unit::TestCase
     
     assert_equal expectation_hash, actual_hash
   end
+
+  def test_file_size 
+    Hdfs::File.open(testfile_remote, "w") do |f|
+        f.write("abcdef")
+    end
+    assert_equal 6, Hdfs::File.size(testfile_remote)
+  end
+
+
 end
